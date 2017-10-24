@@ -12,6 +12,27 @@
   </div>
 </form>
 
+<div class="game-controls">
+  <div class="question">
+    <div class="question-content">
+      <h1>{{apiService.game?.question}}</h1>
+    </div>
+    <form class="answer-form"
+          *ngIf="apiService.playerRegistered"
+          autocomplete="off">
+      <input class="answer-input"
+             [(ngModel)]="apiService.myAnswer"
+             name="answer"
+             title="answer"
+             autocomplete="off"
+             required/>
+      <button class="answer-submit"
+              (click)="apiService.answer($event)">Odpowiedz
+      </button>
+    </form>
+  </div>
+</div>
+
 <div class="player-list">
   <h3>Gracze:</h3>
   <div *ngFor="let player of apiService.players">

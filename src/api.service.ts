@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import * as jwt from 'jsonwebtoken';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/publish';
@@ -27,6 +27,8 @@ export class ApiService {
 
   public playerRegistered = false;
 
+  private secureHeaders = new Headers();
+
   constructor(private http: Http,
               private websocketService: WebSocketService) {
 
@@ -50,6 +52,23 @@ export class ApiService {
 
         localStorage.setItem('playerToken', this.token);
       });
+  }
+
+  public answer() {
+
+    this.http.post(this.URL + '/game/play/answer', {
+      answer: this.myAnswer
+    }, {
+      headers: this.secureHeaders
+    }).subscribe((response: any) => {
+      //
+    });
+
+    this.game.plays.forEach((play) => {
+      if (play.playerId === this.player.name) {
+        play.answer = this.myAnswer;
+      }
+    });
   }
 
   public connect() {
@@ -83,6 +102,7 @@ export class ApiService {
   private useToken(token: string) {
 
     this.token = token;
+    this.secureHeaders.set('Authorization', 'Bearer ' + token);
     this.player.name = jwt.decode(token);
   }
 }
