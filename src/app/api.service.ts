@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { Headers, Http, Response } from '@angular/http';
+import { Router } from '@angular/router';
 import * as jwt from 'jsonwebtoken';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/publish';
 import { Observable } from 'rxjs/Observable';
+import { environment } from '../environments/environment';
+import { SocketMessageTypes } from '../interfaces/message';
 import { WebSocketService } from './websocket.service';
-import { environment } from './environments/environment';
-import { SocketMessageTypes } from './interfaces/message';
 
 @Injectable()
 export class ApiService {
 
   private URL = 'http://' + environment.apiURL + '/api';
   private wsURL = 'ws://' + environment.apiURL;
+  private secureHeaders = new Headers();
 
   public token = '';
 
@@ -27,19 +29,23 @@ export class ApiService {
 
   public playerRegistered = false;
 
-  private secureHeaders = new Headers();
-
   constructor(private http: Http,
-              private websocketService: WebSocketService) {
+              private websocketService: WebSocketService,
+              private router: Router) {
 
-    //
+    if (localStorage.getItem('playerToken')) {
+
+      this.useToken(localStorage.getItem('playerToken'));
+    }
+
+    this.playerRegistered = !!this.token;
   }
 
-  public signIn(name): Observable<any> {
+  public signIn(name, password): Observable<any> {
 
     return this.http.post(this.URL + '/player', {
       id: name,
-      password: 'pracuj456$'
+      password: password
     })
       .do((response) => {
 
@@ -47,10 +53,19 @@ export class ApiService {
         this.player = {
           name: name
         };
-        this.playerRegistered = true;
         this.useToken(body.token);
 
         localStorage.setItem('playerToken', this.token);
+      });
+  }
+
+  public signOut(): void {
+
+    this.removeToken()
+      .subscribe(() => {
+
+        this.playerRegistered = false;
+        this.router.navigate(['/rejestracja']);
       });
   }
 
@@ -70,6 +85,7 @@ export class ApiService {
       }
     });
   }
+
 
   public connect() {
     const socket = this.websocketService.connect(this.wsURL, this.token);
@@ -96,6 +112,7 @@ export class ApiService {
       }
     }, (error) => {
       console.log(error);
+      this.forceLogout();
     });
   }
 
@@ -105,4 +122,36 @@ export class ApiService {
     this.secureHeaders.set('Authorization', 'Bearer ' + token);
     this.player.name = jwt.decode(token);
   }
+
+  private removeToken(): Observable<Response> {
+
+    localStorage.removeItem('playerToken');
+
+    const obs = this.http.post(this.URL + '/player/logout',
+      {},
+      {
+        headers: this.secureHeaders
+      })
+      .publish();
+
+    obs.connect();
+
+    obs
+      .subscribe(() => {
+        delete this.token;
+        this.secureHeaders = new Headers();
+      });
+
+    return obs;
+  }
+
+  private forceLogout() {
+
+    localStorage.removeItem('playerToken');
+    this.playerRegistered = false;
+    delete this.token;
+    this.router.navigate(['/rejestracja']);
+  }
+
+
 }

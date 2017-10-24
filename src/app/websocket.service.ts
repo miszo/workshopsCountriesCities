@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import ioClient from 'socket.io-client';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { ISocketMessage } from './interfaces/message';
+import { ISocketMessage } from '../interfaces/message';
 
 @Injectable()
 export class WebSocketService {
