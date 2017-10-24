@@ -12,17 +12,19 @@ export class AppComponent {
 
 
   public player = {
-    name: ''
+    name: '',
+    password: 'pracuj456$'
   };
 
-  constructor(private apiService: ApiService) {
+  constructor(public apiService: ApiService) {
   }
 
 
   public singIn(playerCredentials): void {
-    this.apiService.singIn(playerCredentials.name)
+    this.apiService.singIn(playerCredentials)
       .subscribe(() => {
         console.log('registered!');
+        this.apiService.connect();
       });
   }
 

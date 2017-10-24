@@ -1,13 +1,28 @@
 <h1>{{ gameTitle }}</h1>
 
-<form (ngSubmit)="singIn(loginForm.value)"
+<form class="login-form"
+      (ngSubmit)="singIn(loginForm.value)"
       #loginForm="ngForm">
   <div>
     <input [(ngModel)]="player.name"
-           type="text" name="name"
+           type="text"
+           name="name"
            title="name"
            placeholder="Nick"
+           required/>
+    <input [(ngModel)]="player.password"
+           type="password"
+           name="password"
+           title="password"
+           placeholder="Password"
            required/>
   </div>
   <button type="submit">Zacznij grę</button>
 </form>
+
+<div class="player-list">
+  <h3>Gracze:</h3>
+  <div *ngFor="let player of apiService.players">
+    {{player.id}} ({{player.points}} pkt.)
+  </div>
+</div>

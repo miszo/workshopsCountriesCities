@@ -1,0 +1,43 @@
+.game {
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 1rem;
+  width: 100%;
+  background: #E4F0FB;
+  margin-bottom: 1rem;
+}
+
+.game-question {
+  width: 200px;
+  border-right: solid 1px #ddd;
+}
+
+.game-plays {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.game-play {
+  padding: 1rem;
+  margin: 1rem;
+  background: #CEE2F5;
+}
+
+.game-play > * {
+  display: block;
+}
+
+.game-answer {
+  font-weight: 700;
+}
+
+.game-points {
+  display: block;
+  width: 100%;
+  text-align: right;
+  margin-top: 5px;
+}
+
+.solved {
+  color: #aaa;
+}
