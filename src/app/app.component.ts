@@ -8,4 +8,13 @@ import { Component } from '@angular/core';
 export class AppComponent {
 
   public gameTitle = 'Państwa - miasta';
+
+  public player = {
+    name: ''
+  };
+
+  public signIn(playerCredentials): void {
+
+    console.log(playerCredentials);
+  }
 }
