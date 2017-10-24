@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-root',
@@ -13,8 +14,15 @@ export class AppComponent {
     name: ''
   };
 
+  constructor(private apiService: ApiService) {
+    //
+  }
+
   public signIn(playerCredentials): void {
 
-    console.log(playerCredentials);
+    this.apiService.signIn(playerCredentials.name)
+      .subscribe(() => {
+        console.log('registered!');
+      });
   }
 }
