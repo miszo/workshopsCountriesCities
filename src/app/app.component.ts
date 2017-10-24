@@ -14,7 +14,7 @@ export class AppComponent {
     name: ''
   };
 
-  constructor(private apiService: ApiService) {
+  constructor(public apiService: ApiService) {
     //
   }
 
@@ -23,6 +23,7 @@ export class AppComponent {
     this.apiService.signIn(playerCredentials.name)
       .subscribe(() => {
         console.log('registered!');
+        this.apiService.connect();
       });
   }
 }
