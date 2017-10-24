@@ -1,2 +1,13 @@
 <h1>{{ gameTitle }}</h1>
-<app-login-page></app-login-page>
+
+<form (ngSubmit)="singIn(loginForm.value)"
+      #loginForm="ngForm">
+  <div>
+    <input [(ngModel)]="player.name"
+           type="text" name="name"
+           title="name"
+           placeholder="Nick"
+           required/>
+  </div>
+  <button type="submit">Zacznij grę</button>
+</form>

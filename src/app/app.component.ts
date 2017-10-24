@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ApiService } from '../api.service';
 
 @Component({
   selector: 'app-root',
@@ -6,8 +7,23 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor() {}
 
   public gameTitle = 'Państwa - miasta';
+
+
+  public player = {
+    name: ''
+  };
+
+  constructor(private apiService: ApiService) {
+  }
+
+
+  public singIn(playerCredentials): void {
+    this.apiService.singIn(playerCredentials.name)
+      .subscribe(() => {
+        console.log('registered!');
+      });
+  }
 
 }
